@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        /* var j=1000
+        console.log(j)     //global variable
+
+        function show (){
+        var i=10  // local variable
+
+
+        console.log (" value of i is "+i)
+        console.log ( " value of j is "+j)
+        }
+        show()
+        console.log (i)
+        consloe.log (j)
+        */
+
+        function show(){
+            var i=10
+            console.log( "inside show function",i)
+
+            function show1(){
+                var j=200
+                console.log("inside show 1 value of i",i)
+                console.log("inside show 1 value of j",i)
+            }
+            show1()
+        }
+        show()
+ 
+
+    
+    </script>
+</body>
+</html>

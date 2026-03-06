@@ -1,0 +1,117 @@
+<html lang="en">
+<head>
+    <title>Var Let Const</title>
+</head>
+
+<body>
+
+<h1>Variable (var), let & const</h1>
+
+<script>
+
+var i = 200;
+
+if(true){
+    let i = 20;
+    i = 40;
+    console.log("Inside function:" + i);
+}
+
+console.log("Outside function:" + i);
+
+var a = 1;
+let b = 2;
+const c = 3;
+
+a = 11;
+b = 22;
+
+console.log("var keyword:" + a + "<br>");
+console.log("let keyword:" + b + "<br>");
+console.log("const keyword:" + c + "<br>");
+
+</script>
+
+</body>
+</html>
+console.log("----- push() -----")
+
+let fruits = ['apple', 'banana'];
+console.log(fruits);
+fruits.push('orange', 'grape');
+console.log(fruits);
+
+
+console.log("----- pop() -----")
+
+let fruit = ['apple', 'banana', 'orange'];
+console.log(fruit);
+
+let lastFruit = fruit.pop();
+console.log(lastFruit);
+console.log(fruit);
+
+
+console.log("----- unshift() -----")   // adds elements to the start
+
+let fruit_unshift = ['banana', 'orange'];
+console.log(fruit_unshift);
+
+fruit_unshift.unshift('apple', 'grape');
+console.log(fruit_unshift);
+
+
+console.log("----- shift() -----")   // remove elements from the start
+
+let fruit_shift = ['apple', 'banana', 'orange'];
+console.log(fruit_shift);
+
+let firstFruit = fruit_shift.shift();
+console.log(firstFruit);
+console.log(fruit_shift);
+
+
+console.log("----- length property -----")
+
+let fruit_length = ['apple', 'banana', 'mango', 'orange'];
+console.log(fruit_length);
+
+fruit_length.length = 2;   // truncating the array
+console.log(fruit_length);
+console.log("===== shift() =====")   // remove elements from the start
+let fruit_shift = ['apple', 'banana', 'orange'];
+console.log(fruit_shift)
+
+let firstFruit = fruit_shift.shift();
+console.log(firstFruit)
+console.log(fruit_shift)
+
+
+console.log("===== length property =====")
+let fruit_length = ['apple', 'banana', 'mango', 'orange']
+console.log(fruit_length.length)
+
+fruit_length.length = 2     // truncating the array
+console.log(fruit_length.length)
+
+fruit_length.length = 6     // expanding the array
+console.log(fruit_length)
+
+
+console.log("===== indexOf() =====")
+let fruit_indexof = ['apple', 'banana', 'mango', 'orange', 'strawberry', 'banana', 9]
+
+console.log("index of banana:", fruit_indexof.indexOf('banana'))
+console.log("index of banana after 2 index:", fruit_indexof.indexOf('banana', 2))
+console.log("index of digit 9:", fruit_indexof.indexOf(9))
+
+
+console.log("===== concat() =====")
+let fruits1 = ['apple', 'banana'];
+console.log(fruits1)
+
+let fruits2 = ['orange', 'grape'];
+console.log(fruits2)
+
+let allfruits = fruits1.concat(fruits2);
+console.log(allfruits);

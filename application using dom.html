@@ -1,0 +1,31 @@
+<HTML lang="en">
+<body>
+    <div class main="maina">
+    <div class="head">
+    </div>
+    <div clas=" program">
+     <input type="number"   name="mohit" id="display" valu="o">
+     <button type="button"    id="inc">increase</button>
+     <button type="button"    id="reset">reset</button>
+     <button type="button"    id="drsc">decrease</button>
+    </div>
+    <script>
+
+        let dis = document.getElementById("dispaly")
+        let inc = document.getElementById("inc")
+        let res = document.getElementById("reset")
+        let dese = document.getElementById("desc")
+        let x = dis.value
+
+        consloe.log(x)
+        inc.oncick = function(){
+            x++
+            dis.vlaue=x
+        }
+        res . onclick = function (){
+            dis.vlaue=0
+        }
+    </script>
+
+
+

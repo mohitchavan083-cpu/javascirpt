@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Unit Converter</title>
+</head>
+<body>
+
+<div class="main">
+    <div class="box">
+        <h1>Unit Converter</h1>
+
+        <div class="operation">
+            <input type="number" id="display" value="1"><br><br>
+
+            <input type="radio" name="convert" id="m_to_cm">
+            <label for="m_to_cm">Centimeter -> Meter</label><br><br>
+
+            <input type="radio" name="convert" id="km_to_m">
+            <label for="km_to_m">Kilometer -> Meter</label><br><br>
+
+            <input type="radio" name="convert" id="mi_to_km">
+            <label for="mi_to_km">Mile -> Kilometer</label><br><br>
+
+            <button type="button" onclick="convert()">Convert</button>
+        </div>
+
+        <h2 id="result"></h2>
+    </div>
+</div>
+
+<script>
+function convert() {
+    let dis = document.getElementById("display");
+    let m_to_cm = document.getElementById("m_to_cm");
+    let km_to_m = document.getElementById("km_to_m");
+    let mi_to_km = document.getElementById("mi_to_km");
+    let res = document.getElementById("result");
+
+    console.log(dis.value);
+
+    if (m_to_cm.checked) {
+        let con = dis.value * 100;
+        res.textContent = con;
+    }
+    else if (km_to_m.checked) {
+        let con = dis.value * 1000;
+        res.textContent = con;
+    }
+    else if (mi_to_km.checked) {
+        let con = dis.value * 1.609;
+        res.textContent = con;
+    }
+}
+</script>
+
+</body>
+</html>

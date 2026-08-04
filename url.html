@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Phishing URL Detector</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Outfit:wght@400;600;700;800&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#080e1a;--panel:#0d1626;--border:#1e2d45;--accent:#3b82f6;--safe:#22c55e;--warn:#f59e0b;--danger:#ef4444;--text:#dde6f5;--muted:#4a6080}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(59,130,246,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(59,130,246,.04) 1px,transparent 1px);background-size:40px 40px;pointer-events:none}
+body::after{content:'';position:fixed;top:-120px;left:50%;transform:translateX(-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(59,130,246,.07) 0%,transparent 70%);pointer-events:none}
+.w{width:100%;max-width:480px;position:relative;z-index:1}
+.header{text-align:center;margin-bottom:24px}
+.sw{display:inline-flex;align-items:center;justify-content:center;width:62px;height:62px;background:linear-gradient(135deg,#1a2a45,#0d1a30);border:1px solid var(--border);border-radius:18px;margin-bottom:12px;position:relative;animation:float 3s ease-in-out infinite}
+.sw::before{content:'';position:absolute;inset:-1px;border-radius:18px;background:linear-gradient(135deg,rgba(59,130,246,.35),transparent 55%);z-index:-1}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+h1{font-size:22px;font-weight:800;letter-spacing:-.3px;background:linear-gradient(135deg,#e2eeff,#7faaff);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+p.s{color:var(--muted);font-size:13px;margin-top:4px}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:18px 20px;margin-bottom:14px;position:relative;overflow:visible}
+.card::before{content:'';position:absolute;inset:0;border-radius:14px;background:linear-gradient(135deg,rgba(255,255,255,.02),transparent);pointer-events:none}
+.itop{display:flex;align-items:center;justify-content:flex-end;margin-bottom:10px}
+.vt{display:flex;align-items:center;background:#060d1a;border:1px solid var(--border);border-radius:99px;padding:3px;gap:2px}
+.vb{display:flex;align-items:center;justify-content:center;background:transparent;border:none;border-radius:99px;padding:6px 10px;font-family:'Outfit',sans-serif;color:var(--muted);cursor:pointer;transition:background .2s,color .2s,box-shadow .2s}
+.vb svg{flex-shrink:0;opacity:.55;transition:opacity .2s}
+.vb.on{background:linear-gradient(135deg,#1a3460,#162d54);color:var(--text);box-shadow:0 1px 5px rgba(0,0,0,.5);border:1px solid rgba(59,130,246,.25)}
+.vb.on svg{opacity:1}
+.vb:hover:not(.on){color:#94a3b8}
+.vb::after{display:none}.vb:hover{transform:none!important;box-shadow:none!important}.vb:active{transform:none!important}
+.vb.on:hover{box-shadow:0 1px 5px rgba(0,0,0,.5)!important}
+.row{display:flex;gap:10px;align-items:stretch}
+input{flex:1;min-width:0;background:#060d1a;border:1px solid var(--border);border-radius:10px;padding:12px 14px;color:var(--text);font-size:14px;font-family:'Outfit',sans-serif;outline:none;transition:border-color .2s,box-shadow .2s}
+input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(59,130,246,.12)}
+.cb{flex-shrink:0;background:linear-gradient(135deg,#2563eb,#1a4fc4);color:#fff;border:none;border-radius:10px;padding:12px 20px;font-size:14px;font-weight:700;font-family:'Outfit',sans-serif;cursor:pointer;position:relative;overflow:hidden;transition:transform .15s,box-shadow .15s;white-space:nowrap}
+.cb:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(37,99,235,.4)}
+.cb:active{transform:translateY(0)}
+.cb::after{content:'';position:absolute;inset:0;background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.15) 50%,transparent 60%);transform:translateX(-100%);transition:transform .5s}
+.cb:hover::after{transform:translateX(100%)}
+#so{display:none;position:fixed;inset:0;z-index:100;background:rgba(8,14,26,.9);backdrop-filter:blur(8px);align-items:center;justify-content:center;flex-direction:column;gap:18px}
+#so.on{display:flex}
+.sr{width:110px;height:110px;position:relative;display:flex;align-items:center;justify-content:center}
+.sr svg{position:absolute;inset:0;width:100%;height:100%;animation:spin 1.3s linear infinite}
+.sr svg circle{fill:none;stroke-width:3;stroke-linecap:round;stroke-dasharray:220;stroke-dashoffset:55;stroke:var(--accent);opacity:.9}
+@keyframes spin{to{transform:rotate(360deg)}}
+.si{font-size:28px;animation:pi 1.3s ease-in-out infinite}
+@keyframes pi{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(.87);opacity:.65}}
+.st{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--accent);letter-spacing:2.5px;text-align:center;animation:bt 1.3s step-end infinite}
+@keyframes bt{0%,100%{opacity:1}50%{opacity:.3}}
+.sb{width:180px;height:3px;background:rgba(59,130,246,.1);border-radius:99px;overflow:hidden}
+.sbi{height:100%;width:0%;background:linear-gradient(90deg,#2563eb,#60a5fa);border-radius:99px;transition:width .15s linear}
+#r{display:none}
+.rv{opacity:0;transform:translateY(10px);transition:opacity .4s ease,transform .4s ease}
+.rv.in{opacity:1;transform:translateY(0)}
+.v{border-left:5px solid;border-radius:8px;padding:14px;margin-bottom:14px;font-size:15px;font-weight:700}
+.safe{border-color:#22c55e;background:rgba(34,197,94,.09);color:#4ade80}
+.warn{border-color:#f59e0b;background:rgba(245,158,11,.09);color:#fbbf24}
+.danger{border-color:#ef4444;background:rgba(239,68,68,.09);color:#f87171}
+.sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.sl{font-size:11px;color:#94a3b8;font-weight:700;letter-spacing:1px}
+.sv{font-size:11px;font-weight:700}
+.track{background:#060d1a;border-radius:99px;height:10px;overflow:hidden;border:1px solid var(--border)}
+.fill{height:100%;border-radius:99px;width:0%;transition:width 1s cubic-bezier(.25,.46,.45,.94)}
+.leg{display:flex;justify-content:space-between;font-size:10px;margin-top:6px}
+#vc{display:none}
+.gw{display:flex;align-items:center;gap:20px;padding:2px 0}
+.g{position:relative;width:90px;height:90px;flex-shrink:0}
+.g svg{width:90px;height:90px;transform:rotate(-90deg)}
+.gbg{fill:none;stroke:#1a2840;stroke-width:8}
+.ga{fill:none;stroke-width:8;stroke-linecap:round;stroke-dasharray:207.35;stroke-dashoffset:207.35}
+.gc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'Share Tech Mono',monospace}
+.gn{font-size:22px;font-weight:700;line-height:1}
+.gd{font-size:9px;color:var(--muted);margin-top:1px}
+.gi{flex:1}
+.gt{font-size:10px;letter-spacing:1px;color:var(--muted);font-weight:700;margin-bottom:6px}
+.gv{font-size:17px;font-weight:800;margin-bottom:8px}
+.gl{display:flex;flex-direction:column;gap:5px}
+.glr{display:flex;align-items:center;gap:6px;font-size:10px}
+.gld{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+footer{text-align:center;color:#334155;font-size:11px;margin-top:4px}
+</style>
+</head>
+<body>
+<div id="so">
+  <div class="sr"><svg viewBox="0 0 110 110"><circle cx="55" cy="55" r="48"/></svg><div class="si">🔍</div></div>
+  <div class="st" id="sm">ANALYZING URL...</div>
+  <div class="sb"><div class="sbi" id="sb"></div></div>
+</div>
+<div class="w">
+  <div class="header">
+    <div class="sw"><span style="font-size:28px">🛡️</span></div>
+    <h1>Phishing URL Detector</h1>
+    <p class="s">Enter any URL to check if it is safe or dangerous</p>
+  </div>
+  <div class="card">
+    <div class="itop">
+      <div class="vt">
+        <button class="vb on" id="bb" onclick="sv('bar')" title="Bar view">
+          <svg viewBox="0 0 14 12" fill="currentColor" width="14" height="12"><rect x="0" y="7.5" width="14" height="3.5" rx="1.75"/><rect x="0" y="0" width="9" height="3" rx="1.5" opacity=".5"/></svg>
+        </button>
+        <button class="vb" id="bc" onclick="sv('circle')" title="Circle view">
+          <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" width="14" height="14"><circle cx="7" cy="7" r="5.5" stroke-opacity=".35"/><path d="M7 1.5 A5.5 5.5 0 1 1 1.5 7" stroke-linecap="round" stroke-width="2.2"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="row">
+      <input type="text" id="u" placeholder="e.g. google.com"/>
+      <button class="cb" onclick="go()">Check</button>
+    </div>
+  </div>
+  <div id="r">
+    <div class="card">
+      <div id="v" class="v rv"></div>
+      <div id="sb2" class="rv" style="transition-delay:.13s">
+        <div class="sh"><span class="sl">THREAT LEVEL</span><span class="sv" id="sc"></span></div>
+        <div id="vb2">
+          <div class="track"><div class="fill" id="f"></div></div>
+          <div class="leg"><span style="color:#22c55e">Safe (0-30)</span><span style="color:#f59e0b">Suspicious (31-60)</span><span style="color:#ef4444">Phishing (61-100)</span></div>
+        </div>
+        <div id="vc">
+          <div class="gw">
+            <div class="g">
+              <svg viewBox="0 0 90 90"><circle class="gbg" cx="45" cy="45" r="33"/><circle class="ga" id="ga" cx="45" cy="45" r="33"/></svg>
+              <div class="gc"><span class="gn" id="gn">0</span><span class="gd">/100</span></div>
+            </div>
+            <div class="gi">
+              <div class="gt">THREAT LEVEL</div>
+              <div class="gv" id="gv"></div>
+              <div class="gl">
+                <div class="glr"><span class="gld" style="background:#22c55e"></span><span style="color:#22c55e">Safe (0–30)</span></div>
+                <div class="glr"><span class="gld" style="background:#f59e0b"></span><span style="color:#f59e0b">Suspicious (31–60)</span></div>
+                <div class="glr"><span class="gld" style="background:#ef4444"></span><span style="color:#ef4444">Phishing (61–100)</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer>Phishing URL Detection System &middot; College Project</footer>   
+</div>
+<script>
+var T=["google.com","youtube.com","facebook.com","instagram.com","twitter.com","x.com","wikipedia.org","amazon.com","microsoft.com","apple.com","github.com","linkedin.com","reddit.com","netflix.com","whatsapp.com","telegram.org","discord.com","tiktok.com","zoom.us","paypal.com","ebay.com","yahoo.com","bing.com","spotify.com","dropbox.com","twitch.tv","adobe.com","samsung.com","flipkart.com","pinterest.com","snapchat.com","quora.com","medium.com","stackoverflow.com"];
+var BT=[".xyz",".top",".tk",".ml",".ga",".cf",".gq",".club",".online",".site",".buzz",".live",".info",".pw",".cc",".ws",".biz",".click",".link",".loan",".win",".stream"];
+var SH=["bit.ly","tinyurl.com","t.co","goo.gl","ow.ly","rb.gy","cutt.ly","is.gd"];
+var KW=["login","verify","secure","account","update","confirm","suspended","banking","wallet","password","credential","signin","authenticate","validation","recover","unlock","alert","webscr"];
+var BR=["google","youtube","facebook","amazon","microsoft","apple","paypal","netflix","instagram","whatsapp","telegram","discord","spotify","dropbox","twitter","linkedin","ebay","tiktok","snapchat","pinterest"];
+var CV='bar',CIRC=2*Math.PI*33;
+
+function lev(a,b){var d=[];for(var i=0;i<=a.length;i++){d[i]=[i];for(var j=1;j<=b.length;j++)d[i][j]=0;}for(var j=0;j<=b.length;j++)d[0][j]=j;for(var i=1;i<=a.length;i++)for(var j=1;j<=b.length;j++)d[i][j]=a[i-1]==b[j-1]?d[i-1][j-1]:1+Math.min(d[i-1][j],d[i][j-1],d[i-1][j-1]);return d[a.length][b.length];}
+function norm(s){return s.replace(/0/g,'o').replace(/1/g,'l').replace(/3/g,'e').replace(/4/g,'a').replace(/5/g,'s').replace(/8/g,'b').replace(/@/g,'a');}
+function $(i){return document.getElementById(i);}
+
+var SM=["RESOLVING HOST...","CHECKING PROTOCOLS...","SCANNING KEYWORDS...","ANALYZING STRUCTURE...","COMPUTING SCORE...","DONE"];
+function scan(cb){var o=$('so'),b=$('sb'),m=$('sm'),s=0,n=SM.length,t=1500/n;o.classList.add('on');function tick(){if(s<n){m.textContent=SM[s];b.style.width=Math.round((s/(n-1))*100)+'%';s++;setTimeout(tick,t);}else{o.classList.remove('on');cb();}}tick();}
+
+function sv(v){if(v===CV)return;CV=v;$('bb').classList.toggle('on',v==='bar');$('bc').classList.toggle('on',v==='circle');}
+
+function arc(sc,col){var a=$('ga'),n=$('gn');a.style.stroke=n.style.color=col;a.style.transition='none';a.style.strokeDashoffset=CIRC;n.textContent='0';a.getBoundingClientRect();a.style.transition='stroke-dashoffset 1s cubic-bezier(.25,.46,.45,.94)';a.style.strokeDashoffset=CIRC-(sc/100)*CIRC;var s=null,d=950;function cu(ts){if(!s)s=ts;var p=Math.min((ts-s)/d,1);n.textContent=Math.round((1-Math.pow(1-p,3))*sc);if(p<1)requestAnimationFrame(cu);else n.textContent=sc;}requestAnimationFrame(cu);}
+
+function go(){
+  var raw=$('u').value.trim();if(!raw)return;
+  var url=raw.indexOf('http')!==0?'https://'+raw:raw,host='',path='',qs='';
+  try{var p=new URL(url);host=p.hostname.toLowerCase().replace(/^www\./,'');path=p.pathname;qs=p.search;}
+  catch(e){host=url.replace(/https?:\/\//,'').split('/')[0].toLowerCase().replace(/^www\./,'');}
+  if(!host)return;
+  var pts=host.split('.'),dn=pts.length>=2?pts[pts.length-2]:'',full=(url+path+qs).toLowerCase(),trusted=false;
+  for(var i=0;i<T.length;i++){if(host===T[i]||host.slice(-T[i].length-1)==='.'+T[i]){trusted=true;break;}}
+  var sc=trusted?-65:20;
+  if(url.indexOf('https://')!==0)sc+=22;
+  if(/^(\d{1,3}\.){3}\d{1,3}$/.test(host))sc+=60;
+  var h=(host.match(/-/g)||[]).length;
+  if(h>=3)sc+=30;else if(h>=1&&!trusted)sc+=12;
+  if(pts.length>4)sc+=22;else if(pts.length===4&&!trusted)sc+=10;
+  if(host.length>40)sc+=18;else if(host.length>25&&!trusted)sc+=10;
+  for(var i=0;i<BT.length;i++){if(host.slice(-BT[i].length)===BT[i]){sc+=35;break;}}
+  for(var i=0;i<SH.length;i++){if(host.indexOf(SH[i])!==-1){sc+=35;break;}}
+  var kh=0;for(var i=0;i<KW.length;i++){if(full.indexOf(KW[i])!==-1)kh++;}
+  sc+=kh>=3?35:kh===2?22:kh===1?12:0;
+  if(path.split('/').filter(function(x){return x;}).length>=5)sc+=15;
+  if(!trusted){var nd=norm(dn);for(var i=0;i<BR.length;i++){if(nd===BR[i]||dn===BR[i])continue;if(lev(nd,BR[i])<=1||lev(dn,BR[i])<=1){sc+=55;break;}if(host.indexOf(BR[i])!==-1){sc+=20;break;}}if(nd!==dn)for(var i=0;i<BR.length;i++){if(lev(nd,BR[i])<=1){sc+=20;break;}}}
+  sc=Math.min(100,Math.max(0,sc));
+  scan(function(){show(sc);});
+}
+
+function show(sc){
+  var vd=sc<=22?'SAFE':sc<=52?'SUSPICIOUS':'PHISHING';
+  var M={SAFE:{cls:'safe',lbl:'✅  This website looks safe.',col:'#22c55e'},SUSPICIOUS:{cls:'warn',lbl:'⚠️  This website looks suspicious.',col:'#f59e0b'},PHISHING:{cls:'danger',lbl:'🚨  Warning: Possible phishing!',col:'#ef4444'}};
+  var s=M[vd],ve=$('v');
+  ve.className='v '+s.cls+' rv';ve.textContent=s.lbl;
+  $('sc').textContent=sc+' / 100';$('sc').style.color=s.col;
+  $('gv').textContent=vd;$('gv').style.color=s.col;
+  var be=$('vb2'),ce=$('vc'),fe=$('f'),ae=$('ga');
+  if(CV==='bar'){be.style.display='block';ce.style.display='none';fe.style.transition='none';fe.style.width='0%';fe.style.background=s.col;}
+  else{be.style.display='none';ce.style.display='block';ae.style.transition='none';ae.style.strokeDashoffset=CIRC;ae.style.stroke=s.col;$('gn').textContent='0';$('gn').style.color=s.col;}
+  $('r').style.display='block';ve.classList.remove('in');$('sb2').classList.remove('in');
+  requestAnimationFrame(function(){requestAnimationFrame(function(){
+    ve.classList.add('in');
+    setTimeout(function(){$('sb2').classList.add('in');setTimeout(function(){CV==='bar'?(fe.style.transition='width 1s cubic-bezier(.25,.46,.45,.94)',fe.style.width=sc+'%'):arc(sc,s.col);},80);},130);
+  });});
+}
+
+$('u').addEventListener('keydown',function(e){if(e.key==='Enter')go();});
+</script>
+</body>
+</html> 
